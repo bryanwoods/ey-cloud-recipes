@@ -1,14 +1,12 @@
 script "install-mongo" do
   interpreter "bash"
   user "root"
-  cwd "/usr/local/src"
+  cwd "/usr/local"
   code <<-EOH
-  wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.0.1.tgz
-  tar -zxf mongodb-linux-x86_64-1.0.1.tgz
-  mv mongodb-linux-x86_64-1.0.0 /usr/local/mongodb
-  rm mongodb-linux-x86_64-1.0.0.tgz
+  wget -O - http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.0.1.tgz | tar xzf -
+  ln -nfs mongodb-linux-x86_64-1.0.1 mongodb
   EOH
-  not_if do File.directory?("/usr/local/mongodb") end
+  not_if { File.directory?("/usr/local/mongodb-x86_64-1.0.1") }
 end
 
 directory "/db/mongodb/masterdb" do
@@ -16,7 +14,7 @@ directory "/db/mongodb/masterdb" do
   group node[:owner_name]
   mode 0755
   recursive true
-  not_if do File.directory?("/db/mongodb/masterdb") end
+  not_if { File.directory?("/db/mongodb/masterdb") }
 end
 
 directory "/db/mongodb/slavedb" do
@@ -24,7 +22,7 @@ directory "/db/mongodb/slavedb" do
   group node[:owner_name]
   mode 0755
   recursive true
-  not_if do File.directory?("/db/mongodb/slavedb") end
+  not_if { File.directory?("/db/mongodb/slavedb") }
 end
 
 remote_file "/etc/init.d/mongodb" do
@@ -32,7 +30,6 @@ remote_file "/etc/init.d/mongodb" do
   owner "root"
   group "root"
   mode 0755
-  not_if do File.exists?("/etc/init.d/mongodb") end
 end
 
 # service "mongodb" do

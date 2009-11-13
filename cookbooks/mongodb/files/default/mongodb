@@ -10,6 +10,8 @@ depend() {
 MONGODB_EXEC="${MONGODB_EXEC:-/usr/local/mongodb/bin/mongod}"
 MONGODB_MASTER_DATA="${MONGODB_MASTER_DATA:-/db/mongodb/masterdb}"
 MONGODB_SLAVE_DATA="${MONGODB_SLAVE_DATA:-/db/mongodb/slavedb}"
+MONGODB_MASTER_LOG="${MONGODB_MASTER_LOG:-/var/log/mongodb/master.log}"
+MONGODB_SLAVE_LOG="${MONGODB_SLAVE_LOG:-/var/log/mongodb/slave.log}"
 MONGODB_USER="${MONGODB_USER:-mongodb}"
 MONGODB_MASTER_PID_FILE="${MONGODB_MASTER_PID_FILE:-/var/run/mongodb/master.pid}"
 MONGODB_SLAVE_PID_FILE="${MONGODB_SLAVE_PID_FILE:-/var/run/mongodb/slave.pid}"
@@ -22,6 +24,7 @@ start() {
   ebegin "Starting Master ${SVCNAME}"
 
   args="--dbpath $MONGODB_MASTER_DATA --port $MONGODB_MASTER_PORT --bind_ip $MONGODB_IP"
+  args="${args} --logpath $MONGODB_MASTER_LOG --logappend $MONGODB_OPTIONS"
 
   start-stop-daemon --background --start --chuid ${MONGODB_USER} --pidfile \
   "${MONGODB_MASTER_PID_FILE}" --make-pidfile --exec ${MONGODB_EXEC} \
@@ -31,6 +34,7 @@ start() {
   ebegin "Starting Slave ${SVCNAME}"
 
   args="--dbpath $MONGODB_SLAVE_DATA --port $MONGODB_SLAVE_PORT --bind_ip $MONGODB_IP"
+  args="${args} --logpath $MONGODB_SLAVE_LOG --logappend $MONGODB_OPTIONS"
 
   start-stop-daemon --background --start --chuid ${MONGODB_USER} --pidfile \
   "${MONGODB_SLAVE_PID_FILE}" --make-pidfile --exec ${MONGODB_EXEC} \

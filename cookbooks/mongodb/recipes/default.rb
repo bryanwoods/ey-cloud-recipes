@@ -3,8 +3,8 @@ script "install-mongo" do
   user "root"
   cwd "/usr/local/src"
   code <<-EOH
-  wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.0.0.tgz
-  tar -zxf mongodb-linux-x86_64-1.0.0.tgz
+  wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.0.1.tgz
+  tar -zxf mongodb-linux-x86_64-1.0.1.tgz
   mv mongodb-linux-x86_64-1.0.0 /usr/local/mongodb
   rm mongodb-linux-x86_64-1.0.0.tgz
   EOH

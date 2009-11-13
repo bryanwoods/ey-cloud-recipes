@@ -1,8 +1,8 @@
 script "install-mongo" do
   interpreter "bash"
   user "root"
-  cwd "/tmp"
-  code <<-EOH 
+  cwd "/usr/local/src"
+  code <<-EOH
   wget http://downloads.mongodb.org/linux/mongodb-linux-x86_64-1.0.0.tgz
   tar -zxf mongodb-linux-x86_64-1.0.0.tgz
   mv mongodb-linux-x86_64-1.0.0 /usr/local/mongodb
@@ -10,23 +10,23 @@ script "install-mongo" do
   EOH
   not_if do File.directory?("/usr/local/mongodb") end
 end
- 
-directory "/data/masterdb" do
+
+directory "/db/mongodb/masterdb" do
   owner node[:owner_name]
   group node[:owner_name]
   mode 0755
   recursive true
-  not_if do File.directory?("/data/masterdb") end
+  not_if do File.directory?("/db/mongodb/masterdb") end
 end
- 
-directory "/data/slavedb" do
+
+directory "/db/mongodb/slavedb" do
   owner node[:owner_name]
   group node[:owner_name]
   mode 0755
   recursive true
-  not_if do File.directory?("/data/slavedb") end
+  not_if do File.directory?("/db/mongodb/slavedb") end
 end
- 
+
 remote_file "/etc/init.d/mongodb" do
   source "mongodb"
   owner "root"
